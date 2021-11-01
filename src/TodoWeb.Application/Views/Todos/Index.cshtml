@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Todo>
+
+@{
+    ViewData["Title"] = "Início";
+}
+
+<div class="top-content">
+    <h4 class="text-dark" style="float:left;">Seus à fazeres:</h4>
+    <a class="btn btn-success" style="float:right" asp-action="Create">Criar novo</a>
+</div>
+
+<br />
+<br />
+<br />
+
+<div style="display:flex; justify-content:center; align-content:center">
+    <partial name="_TodoPartial" for="@Model" />
+</div>

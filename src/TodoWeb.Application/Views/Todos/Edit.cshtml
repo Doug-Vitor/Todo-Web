@@ -1,0 +1,39 @@
+﻿@model TodoInputModel
+
+@{ 
+    ViewData["Title"] = $"Edição.";
+}
+<div>
+    <h4>@Model.Title: @ViewData["Title"].ToString().ToLower()</h4>
+</div>
+
+
+<form asp-action="Edit">
+    <div class="form-group">
+        <label class="col-form-label" asp-for="Title"></label>
+        <input class="form-control" asp-for="Title" />
+    </div>
+
+    <div class="form-group">
+        <label class="col-form-label" asp-for="Description"></label>
+        <input class="form-control" asp-for="Description" />
+    </div>
+
+    <div class="form-group">
+        <input type="hidden" value="@ViewData[$"{nameof(Todo)}{nameof(Todo.Id)}"]" name="todoId"/>
+
+        <div class="buttons">
+            <a class="btn btn-danger" style="float:right" asp-action="Remove" asp-route-todoId="@ViewData[$"{nameof(Todo)}{nameof(Todo.Id)}"]">Remover</a>
+            <input class="btn btn-success" style="float:right" type="submit" value="Confirmar" />
+        </div>
+    </div>
+</form>
+
+<style>
+    .form-group {
+        max-width: 75%;
+    }
+    .buttons {
+        display:block;
+    }
+</style>

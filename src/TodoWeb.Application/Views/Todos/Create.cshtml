@@ -1,0 +1,35 @@
+﻿@model TodoInputModel
+
+@{ 
+    ViewData["Title"] = "Criar lembrete";
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label class="col-form-label" asp-for="Title"></label>
+        <input  class="form-control" asp-for="Title" />
+    </div>
+
+    <div class="form-group">
+        <label class="col-form-label" asp-for="Description"></label>
+        <input class="form-control" asp-for="Description" />
+    </div>
+
+    <div class="form-group">
+        <div class="buttons">
+            <a class="btn btn-outline-dark" style="float:right" asp-action="Index">Cancelar</a>
+            <input type="submit" class="btn btn-success" style="float:right" value="Confirmar" />
+        </div>
+    </div>
+</form>
+
+<style>
+    .form-group {
+        max-width:75%;
+    }
+    .buttons {
+        display:block;
+    }
+</style>

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Todo>
+
+<div class="main-div">
+    @foreach (Todo todo in Model)
+    {
+        <div class="todo-content">
+            <h4>@todo.Title</h4>
+            <div class="description">
+                <h6>@todo.Description</h6>
+            </div>
+
+            <h6>Criado há: @todo.ElapsedTime()</h6>
+            @if (todo.IsFinished)
+            {
+                <span class="badge bg-success">Finalizada.</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">Não finalizada.</span>
+            }
+
+            <div class="buttons-div">
+                <div>
+                    <a class="btn btn-success" asp-controller="Todos" asp-action="FinishTodo" asp-route-todoId="@todo.Id">Finalizar</a>
+                    <a class="btn btn-info" asp-controller="Todos" asp-action="Edit" asp-route-todoId="@todo.Id">Editar</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .main-div {
+        justify-content: center;
+        align-items: center;
+    }
+    .todo-content {
+    }
+    .description {
+        max-width:275px;
+    }
+    .buttons-div {
+        display:flex;
+        justify-content: right;
+        align-items: center;
+    }
+</style>
