@@ -11,6 +11,7 @@ using TodoWeb.Domain.ViewModels;
 using TodoWeb.Domain.ViewModels.TodoViewModels;
 using TodoWeb.Domain.Configurations;
 using TodoWeb.Infrastructure.Extensions;
+using System.Text.Json;
 
 namespace TodoWeb.Infrastructure.Repositories
 {
@@ -35,11 +36,8 @@ namespace TodoWeb.Infrastructure.Repositories
             request.Content = new StringContent(_mapper.Map<Todo>(inputModel).ToJson(), Encoding.UTF8, _mediaType);
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
-            if (response.StatusCode == HttpStatusCode.Created)
-                return null;
-
-            string json = await response.Content.ReadAsStringAsync();
-            return json.FromJson<ErrorViewModel>();
+            return response.StatusCode == HttpStatusCode.Created ? null 
+                : await response.Content.ReadAsStringAsync().Result.FromJsonAsync<ErrorViewModel>();
         }
 
         public async Task<object> GetByIdAsync(int? id)
@@ -48,10 +46,8 @@ namespace TodoWeb.Infrastructure.Repositories
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
             string json = await response.Content.ReadAsStringAsync();
-            if (response.StatusCode == HttpStatusCode.OK)
-                return json.FromJson<Todo>();
-
-            return json.FromJson<ErrorViewModel>();
+            return response.StatusCode is HttpStatusCode.OK ?
+                json.FromJson<Todo>() : json.FromJson<ErrorViewModel>();
         }
 
         public async Task<object> GetAllAsync()
@@ -60,10 +56,8 @@ namespace TodoWeb.Infrastructure.Repositories
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
             string json = await response.Content.ReadAsStringAsync();
-            if (response.StatusCode == HttpStatusCode.OK)
-                return json.FromJson<IEnumerable<Todo>>();
-
-            return json.FromJson<ErrorViewModel>();
+            return response.StatusCode == HttpStatusCode.OK ? 
+                json.FromJson<IEnumerable<Todo>>() : json.FromJson<ErrorViewModel>();
 
         }
 
@@ -73,11 +67,8 @@ namespace TodoWeb.Infrastructure.Repositories
             request.Content = new StringContent(inputModel.ToJson(), Encoding.UTF8, _mediaType);
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
-            if (response.StatusCode == HttpStatusCode.OK)
-                return null;
-
-            string json = await response.Content.ReadAsStringAsync();
-            return json.FromJson<ErrorViewModel>();
+            return response.StatusCode is HttpStatusCode.OK ? null
+                : await response.Content.ReadAsStringAsync().ToString().FromJsonAsync<ErrorViewModel>();
         }
 
         public async Task<object> RemoveAsync(int? id)
@@ -85,11 +76,8 @@ namespace TodoWeb.Infrastructure.Repositories
             HttpRequestMessage request = new(HttpMethod.Delete, $"{_routingConfiguration.GetTodosPath()}Remove/{id}");
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
-            if (response.StatusCode == HttpStatusCode.OK)
-                return null;
-
-            string json = await response.Content.ReadAsStringAsync();
-            return json.FromJson<ErrorViewModel>();
+            return response.StatusCode is HttpStatusCode.OK ? null
+                : await response.Content.ReadAsStringAsync().ToString().FromJsonAsync<ErrorViewModel>();
         }
     }
 }
