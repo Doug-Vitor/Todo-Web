@@ -6,7 +6,7 @@ namespace TodoWeb.Domain.ViewModels
     public class ErrorViewModel
     {
         public HttpStatusCode StatusCode { get; set; }
-        public IList<string> ErrorsMessage { get; set; }
+        public List<string> ErrorsMessage { get; set; } = new();
 
         public ErrorViewModel()
         {
@@ -18,7 +18,7 @@ namespace TodoWeb.Domain.ViewModels
             ErrorsMessage.Add(errorMessage);
         }
 
-        public ErrorViewModel(HttpStatusCode statusCode, IList<string> errorsMessage)
+        public ErrorViewModel(HttpStatusCode statusCode, List<string> errorsMessage)
         {
             StatusCode = statusCode;
             ErrorsMessage = errorsMessage;
