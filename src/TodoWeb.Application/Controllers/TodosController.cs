@@ -44,7 +44,7 @@ namespace TodoWeb.Application.Controllers
             return result is ErrorViewModel ? RedirectToErrorAction(result) : RedirectToIndex();
         }
 
-        public async Task<RedirectToActionResult> FinishTodo(int todoId)
+        public async Task<RedirectToActionResult> FinishTodo(int? todoId)
         {
             object result = await _todoServices.FinishTodoAsync(todoId);
             return result is ErrorViewModel ? RedirectToErrorAction(result) : RedirectToIndex();
@@ -70,7 +70,7 @@ namespace TodoWeb.Application.Controllers
             return result is ErrorViewModel ? RedirectToErrorAction(result) : RedirectToIndex();
         }
 
-        public async Task<RedirectToActionResult> Remove(int todoId)
+        public async Task<RedirectToActionResult> Remove(int? todoId)
         {
             object result = await _todoRepository.RemoveAsync(todoId);
             return result is ErrorViewModel ? RedirectToErrorAction(result) : RedirectToIndex();

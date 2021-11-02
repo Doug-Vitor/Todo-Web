@@ -11,7 +11,6 @@ using TodoWeb.Domain.ViewModels;
 using TodoWeb.Domain.ViewModels.TodoViewModels;
 using TodoWeb.Domain.Configurations;
 using TodoWeb.Infrastructure.Extensions;
-using System.Text.Json;
 
 namespace TodoWeb.Infrastructure.Repositories
 {
@@ -19,21 +18,19 @@ namespace TodoWeb.Infrastructure.Repositories
     {
         private readonly IHttpClientFactory _client;
         private readonly ApiRoutingConfiguration _routingConfiguration;
-        private readonly IMapper _mapper;
         private const string _mediaType = "application/json";
 
         public TodoRepository(IHttpClientFactory client, 
-            IOptions<ApiRoutingConfiguration> routingConfiguration, IMapper mapper)
+            IOptions<ApiRoutingConfiguration> routingConfiguration)
         {
             _client = client;
             _routingConfiguration = routingConfiguration.Value;
-            _mapper = mapper;
         }
 
         public async Task<object> InsertAsync(TodoInputModel inputModel)
         {
             HttpRequestMessage request = new(HttpMethod.Post, $"{_routingConfiguration.GetTodosPath()}Create");
-            request.Content = new StringContent(_mapper.Map<Todo>(inputModel).ToJson(), Encoding.UTF8, _mediaType);
+            request.Content = new StringContent(inputModel.ToJson(), Encoding.UTF8, _mediaType);
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
             return response.StatusCode == HttpStatusCode.Created ? null 
@@ -42,7 +39,7 @@ namespace TodoWeb.Infrastructure.Repositories
 
         public async Task<object> GetByIdAsync(int? id)
         {
-            HttpRequestMessage request = new(HttpMethod.Get, $"{_routingConfiguration.GetTodosPath()}GetById/{id}");
+            HttpRequestMessage request = new(HttpMethod.Get, $"{_routingConfiguration.GetTodosPath()}GetById/{id.GetValueOrDefault()}");
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
             string json = await response.Content.ReadAsStringAsync();
@@ -63,21 +60,21 @@ namespace TodoWeb.Infrastructure.Repositories
 
         public async Task<object> UpdateAsync(int? id, TodoInputModel inputModel)
         {
-            HttpRequestMessage request = new(HttpMethod.Put, $"{_routingConfiguration.GetTodosPath()}Update/{id}");
+            HttpRequestMessage request = new(HttpMethod.Patch, $"{_routingConfiguration.GetTodosPath()}Update/{id.GetValueOrDefault()}");
             request.Content = new StringContent(inputModel.ToJson(), Encoding.UTF8, _mediaType);
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
             return response.StatusCode is HttpStatusCode.OK ? null
-                : await response.Content.ReadAsStringAsync().ToString().FromJsonAsync<ErrorViewModel>();
+                : await response.Content.ReadAsStringAsync().Result.FromJsonAsync<ErrorViewModel>();
         }
 
         public async Task<object> RemoveAsync(int? id)
         {
-            HttpRequestMessage request = new(HttpMethod.Delete, $"{_routingConfiguration.GetTodosPath()}Remove/{id}");
+            HttpRequestMessage request = new(HttpMethod.Delete, $"{_routingConfiguration.GetTodosPath()}Remove/{id.GetValueOrDefault()}");
             HttpResponseMessage response = await _client.CreateClient().SendAsync(request);
 
             return response.StatusCode is HttpStatusCode.OK ? null
-                : await response.Content.ReadAsStringAsync().ToString().FromJsonAsync<ErrorViewModel>();
+                : await response.Content.ReadAsStringAsync().Result.FromJsonAsync<ErrorViewModel>();
         }
     }
 }
