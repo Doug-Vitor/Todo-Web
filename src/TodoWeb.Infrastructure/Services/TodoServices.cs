@@ -19,11 +19,11 @@ namespace TodoWeb.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task FinishTodoAsync(int todoId)
+        public async Task<object> FinishTodoAsync(int todoId)
         {
             Todo todo = await _todoRepository.GetByIdAsync(todoId) as Todo;
             todo.IsFinished = true;
-            await _todoRepository.UpdateAsync(todoId, _mapper.Map<TodoInputModel>(todo));
+            return _todoRepository.UpdateAsync(todoId, _mapper.Map<TodoInputModel>(todo));
         }
     }
 }
