@@ -54,6 +54,6 @@
 <br/>
 <h3>Outros:</h3>
 <ul>
-  <li>O autor deste projeto iniciou recentemente os estudos sobre a abordagem DDD. É válido ressaltar que tal abordagem deve ser utilizada para resolver problemas da aplicação e não deve ser usada em qualquer aplicação como arquitetura. Deve-se analisar o contexto para tomar tal decisão. O Sistema Todo foi projetado visando atender o domínio apenas para fins didáticos.</li>
+
   <li>É válido ressaltar que o autor deste projeto foca seu aprendizado em desenvolvimento back-end. Portanto, diversos elementos do sistema Todo que estejam atrelados ao desenvolvimento front-end podem estar desalinhados, mal formatados ou mal posicionados.</li>
 </ul>
